@@ -9,13 +9,16 @@
 
 #include "main.h"
 #include "robot.h"
+#include "system/arm.h"
+#include "system/chassis.h"
+#include "system/grabber.h"
 
 enum RobotTeam team;
 
 void driveTobor(int left, int right) {
-    motorSet(ROBOT_MOTOR_DRIVE_LEFT, -left);// Keep the "-", the motor is wired directly into the cortex not allowing the connection to be flipped.
+    motorSet(ROBOT_MOTOR_DRIVE_LEFT1, -left);// Keep the "-", the motor is wired directly into the cortex not allowing the connection to be flipped.
     motorSet(ROBOT_MOTOR_DRIVE_LEFT2, left);
-    motorSet(ROBOT_MOTOR_DRIVE_RIGHT, right);
+    motorSet(ROBOT_MOTOR_DRIVE_RIGHT1, right);
     motorSet(ROBOT_MOTOR_DRIVE_RIGHT2, right);
 }
 

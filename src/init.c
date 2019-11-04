@@ -34,4 +34,22 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
+    print("------------------------------\n");
+    print("Battery Levels\n\n");
+
+    int main = powerLevelMain();
+    if (main != 0) {
+        printf("Main: %dmv\n", main);
+    } else {
+        print("Main battery level cannot be read.\n");
+    }
+
+    int backup = powerLevelBackup();
+    if (backup != 0) {
+        printf("Backup: %dmv\n", backup);
+    } else {
+        print("Backup is not connected.\n");
+    }
+
+    print("------------------------------\n");
 }

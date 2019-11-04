@@ -22,10 +22,10 @@ enum RobotTeam {
 // END Controller
 
 // Motors
-#define ROBOT_MOTOR_DRIVE_LEFT  1
+#define ROBOT_MOTOR_DRIVE_LEFT1 1
 #define ROBOT_MOTOR_DRIVE_LEFT2 2
 
-#define ROBOT_MOTOR_DRIVE_RIGHT  10
+#define ROBOT_MOTOR_DRIVE_RIGHT1 10
 #define ROBOT_MOTOR_DRIVE_RIGHT2 3
 
 #define ROBOT_MOTOR_ARM_LEFT1 6
@@ -34,8 +34,8 @@ enum RobotTeam {
 #define ROBOT_MOTOR_ARM_RIGHT1 4
 #define ROBOT_MOTOR_ARM_RIGHT2 5
 
-#define ROBOT_MOTOR_INTAKE_LEFT  8
-#define ROBOT_MOTOR_INTAKE_RIGHT 9
+#define ROBOT_MOTOR_GRABBER_LEFT  8
+#define ROBOT_MOTOR_GRABBER_RIGHT 9
 // END Motors
 
 // Jumpers
@@ -45,15 +45,5 @@ enum RobotTeam {
 // END Jumpers
 
 // END Robot Definitions
-
-// Allow usage of this file in C++ programs
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-// End C++ export structure
-#ifdef __cplusplus
-}
-#endif
 
 #endif
