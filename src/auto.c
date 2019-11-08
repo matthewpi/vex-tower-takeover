@@ -15,21 +15,6 @@
 
 enum RobotTeam team;
 
-void driveTobor(int left, int right) {
-    motorSet(ROBOT_MOTOR_DRIVE_LEFT1, -left);// Keep the "-", the motor is wired directly into the cortex not allowing the connection to be flipped.
-    motorSet(ROBOT_MOTOR_DRIVE_LEFT2, left);
-    motorSet(ROBOT_MOTOR_DRIVE_RIGHT1, right);
-    motorSet(ROBOT_MOTOR_DRIVE_RIGHT2, right);
-}
-
-void driveForwards() {
-    driveTobor(MOTOR_MAX, MOTOR_MAX);
-}
-
-void driveBackwards() {
-    driveTobor(MOTOR_MIN, MOTOR_MIN);
-}
-
 /**
  * This is in perspective of on the RED side of the field.
  * Left will always turn towards the large goals on the field,
@@ -37,9 +22,11 @@ void driveBackwards() {
  */
 void driveLeft() {
     if (team == TEAM_RED) {
-        driveTobor(MOTOR_MIN, MOTOR_MAX);
+        chassisLeft(MOTOR_MIN);
+        chassisRight(MOTOR_MAX);
     } else {
-        driveTobor(MOTOR_MAX, MOTOR_MIN);
+        chassisLeft(MOTOR_MAX);
+        chassisRight(MOTOR_MIN);
     }
 }
 
@@ -50,22 +37,20 @@ void driveLeft() {
  */
 void driveRight() {
     if (team == TEAM_RED) {
-        driveTobor(MOTOR_MAX, MOTOR_MIN);
+        chassisLeft(MOTOR_MAX);
+        chassisRight(MOTOR_MIN);
     } else {
-        driveTobor(MOTOR_MIN, MOTOR_MAX);
+        chassisLeft(MOTOR_MIN);
+        chassisRight(MOTOR_MAX);
     }
 }
 
-void driveStop() {
-    driveTobor(MOTOR_IDLE, MOTOR_IDLE);
-}
-
 void regularAutonomous() {
-    driveForwards();
+    chassisAll(MOTOR_MAX);
     delay(750);
-    driveBackwards();
+    chassisAll(MOTOR_MIN);
     delay(750);
-    driveStop();
+    chassisStop();
 }
 
 void skillsAutonomous() {
