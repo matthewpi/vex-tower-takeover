@@ -42,7 +42,7 @@ void operatorControl() {
     while (true) {
         if (joystickGetDigital(CONTROLLER_ID, 7, JOY_UP)) {
             slowDrive = true;
-        } else if(joystickGetDigital(CONTROLLER_ID, 7, JOY_RIGHT)) {
+        } else if(joystickGetDigital(CONTROLLER_ID, 7, JOY_LEFT)) {
             slowDrive = false;
         }
 
