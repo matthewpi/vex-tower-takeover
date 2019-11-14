@@ -13,23 +13,45 @@
 #include "system/chassis.h"
 #include "system/grabber.h"
 
-int getThrottle(int axis) {
+#define DRIVE_MINIMUM_SPEED 30
+#define DRIVE_SLOW_MAXIMUM_SPEED 80
+#define DRIVE_SLOW_MULTIPLIER 1.5
+
+/**
+ * Get's the throttle value for a motor from a joystick.
+ *
+ * If the joystick's value is not past "CONTROLLER_JOYSTICK_THRESHOLD",
+ * negatively or positively the return value will be "MOTOR_IDLE"
+ * no matter if the "slow" parameter is true or false.
+ *
+ * If "slow" is true, the value from the joystick will be:
+ *     - Multiplied by "DRIVE_SLOW_MULTIPLIER"
+ *     - Capped at "DRIVE_SLOW_MAXIMUM_SPEED" if the value exceeds it
+ *     - Motors will run at a minimum "DRIVE_MINIMUM_SPEED"
+ */
+int getThrottle(int axis, bool slow) {
     int throttle = joystickGetAnalog(CONTROLLER_ID, axis);
+    bool reverse = (throttle < 0);
+
     // Joystick is pushed forwards.
-    if (throttle > CONTROLLER_JOYSTICK_THRESHOLD) {
-        // This is my janky way of making the joystick allow power control while also
-        // allowing full power even if the joystick is not reading the proper value.
-        if (throttle > 120) {
+    if (abs(throttle) > CONTROLLER_JOYSTICK_THRESHOLD) {
+        if (slow) {
+            throttle /= DRIVE_SLOW_MULTIPLIER;
+
+            if (throttle < DRIVE_MINIMUM_SPEED) {
+                throttle = DRIVE_MINIMUM_SPEED;
+            } else if (throttle > DRIVE_SLOW_MAXIMUM_SPEED) {
+                throttle = DRIVE_SLOW_MAXIMUM_SPEED;
+            }
+        } else if (throttle > 120) {
             throttle = MOTOR_MAX;
+        } else if (throttle < DRIVE_MINIMUM_SPEED) {
+            throttle = DRIVE_MINIMUM_SPEED;
         }
-    // Joystick is pushed backwards.
-    } else if (throttle < (CONTROLLER_JOYSTICK_THRESHOLD * -1)) {
-        // This is my janky way of making the joystick allow power control while also
-        // allowing full power even if the joystick is not reading the proper value.
-        if (throttle < -120) {
-            throttle = MOTOR_MIN;
+
+        if (reverse) {
+            throttle *= -1;
         }
-    // Joystick is either slightly pushed or neutral.
     } else {
         throttle = MOTOR_IDLE;
     }
@@ -40,24 +62,20 @@ int getThrottle(int axis) {
 void operatorControl() {
     bool slowDrive = false;
     while (true) {
+        // Left Keypad [Up] - Enable Slow Drive
         if (joystickGetDigital(CONTROLLER_ID, 7, JOY_UP)) {
             slowDrive = true;
+        // Left Keypad [Left] - Disable Slow Drive
         } else if(joystickGetDigital(CONTROLLER_ID, 7, JOY_LEFT)) {
             slowDrive = false;
         }
 
         // Left Joystick (y-axis)
-        int leftThrottle = getThrottle(3);
-        if (leftThrottle != 0 && slowDrive) {
-            leftThrottle /= 3;
-        }
+        int leftThrottle = getThrottle(3, slowDrive);
         chassisLeft(leftThrottle);
 
         // Right Joystick (y-axis)
-        int rightThrottle = getThrottle(2);
-        if (rightThrottle != 0 && slowDrive) {
-            rightThrottle /= 3;
-        }
+        int rightThrottle = getThrottle(2, slowDrive);
         chassisRight(rightThrottle);
 
         // Right Trigger (Up)
@@ -80,6 +98,7 @@ void operatorControl() {
     	    grabberStop();
     	}
 
+        // Motors can only be updated every 20ms.
         delay(20);
     }
 }

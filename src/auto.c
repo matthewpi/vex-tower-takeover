@@ -47,9 +47,9 @@ void driveRight() {
 
 void regularAutonomous() {
     chassisAll(MOTOR_MAX);
-    delay(750);
+    delay(500);
     chassisAll(MOTOR_MIN);
-    delay(750);
+    delay(500);
     chassisStop();
 }
 
