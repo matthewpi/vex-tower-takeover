@@ -6,16 +6,16 @@
  * Opens the grabber.
  */
 void grabberOpen() {
-    motorSet(ROBOT_MOTOR_GRABBER_LEFT, -40);
-    motorSet(ROBOT_MOTOR_GRABBER_RIGHT, -40);
+    motorSet(ROBOT_MOTOR_GRABBER_LEFT, -50);
+    motorSet(ROBOT_MOTOR_GRABBER_RIGHT, -50);
 }
 
 /**
  * Closes the grabber.
  */
 void grabberClose() {
-    motorSet(ROBOT_MOTOR_GRABBER_LEFT, 60);
-    motorSet(ROBOT_MOTOR_GRABBER_RIGHT, 60);
+    motorSet(ROBOT_MOTOR_GRABBER_LEFT, 90);
+    motorSet(ROBOT_MOTOR_GRABBER_RIGHT, 90);
 }
 
 /**

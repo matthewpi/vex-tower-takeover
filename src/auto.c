@@ -20,13 +20,17 @@ enum RobotTeam team;
  * Left will always turn towards the large goals on the field,
  * while Right will always turn towards the small goals on the field.
  */
-void driveLeft() {
+void driveLeft(int speed) {
+    if (speed < 0) {
+        return;
+    }
+
     if (team == TEAM_RED) {
-        chassisLeft(MOTOR_MIN);
-        chassisRight(MOTOR_MAX);
+        chassisLeft(-speed);
+        chassisRight(speed);
     } else {
-        chassisLeft(MOTOR_MAX);
-        chassisRight(MOTOR_MIN);
+        chassisLeft(speed);
+        chassisRight(-speed);
     }
 }
 
@@ -35,26 +39,94 @@ void driveLeft() {
  * Left will always turn towards the large goals on the field,
  * while Right will always turn towards the small goals on the field.
  */
-void driveRight() {
+void driveRight(int speed) {
+    if (speed < 0) {
+        return;
+    }
+
     if (team == TEAM_RED) {
-        chassisLeft(MOTOR_MAX);
-        chassisRight(MOTOR_MIN);
+        chassisLeft(speed);
+        chassisRight(-speed);
     } else {
-        chassisLeft(MOTOR_MIN);
-        chassisRight(MOTOR_MAX);
+        chassisLeft(-speed);
+        chassisRight(speed);
     }
 }
 
 void regularAutonomous() {
+    /*// Drive forwards
     chassisAll(MOTOR_MAX);
     delay(500);
-    chassisAll(MOTOR_MIN);
+    chassisStop();
+
+    // Close grabber
+    grabberClose();
+    delay(250);
+    grabberStop();
+
+    // Drive forwards
+    chassisAll(MOTOR_MAX);
     delay(500);
     chassisStop();
-}
 
-void skillsAutonomous() {
-    // TODO: Write
+    // Lift arm
+    armLift();
+    delay(300);
+    armStop();
+
+    // Drive forwards
+    chassisAll(75);
+    delay(250);
+    chassisStop();
+
+    // Open grabber
+    grabberOpen();
+    delay(250);
+    grabberStop();
+
+    // Lower arm
+    armDown();
+    delay(300);
+    armStop();
+
+    // Close grabber
+    grabberClose();
+    delay(250);
+    grabberStop();
+
+    // Lift arm
+    armLift();
+    delay(150);
+    armStop();
+
+    // Drive backwards
+    chassisAll(-75);
+    delay(1500);
+    chassisStop();
+
+    // Turn left
+    driveLeft(75);
+    delay(300);
+
+    // Drive forwards
+    chassisAll(75);
+    delay(2250);
+    chassisStop();
+
+    // Lower arm
+    armDown();
+    delay(150);
+    armStop();
+
+    // Open grabber
+    grabberOpen();
+    delay(250);
+    grabberStop();
+
+    // Drive backwards
+    chassisAll(MOTOR_MIN);
+    delay(500);
+    chassisStop();*/
 }
 
 /*
@@ -72,7 +144,7 @@ void skillsAutonomous() {
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
 void autonomous() {
-    if (analogRead(ROBOT_JUMPER_AUTO_RED) > 0) {
+    /*if (analogRead(ROBOT_JUMPER_AUTO_RED) > 0) {
         team = TEAM_RED;
     } else if (analogRead(ROBOT_JUMPER_AUTO_BLUE) > 0) {
         team = TEAM_BLUE;
@@ -83,5 +155,11 @@ void autonomous() {
         return;
     }
 
-    regularAutonomous();
+    regularAutonomous();*/
+
+    chassisAll(MOTOR_MAX);
+    delay(500);
+    chassisAll(MOTOR_MIN);
+    delay(500);
+    chassisStop();
 }

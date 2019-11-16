@@ -29,53 +29,25 @@
  *     - Capped at "DRIVE_SLOW_MAXIMUM_SPEED" if the value exceeds it
  *     - Motors will run at a minimum "DRIVE_MINIMUM_SPEED"
  */
-int getThrottle(int axis, bool slow) {
+int getThrottle(int axis) {
     int throttle = joystickGetAnalog(CONTROLLER_ID, axis);
-    bool reverse = (throttle < 0);
-
-    // Joystick is pushed forwards.
-    if (abs(throttle) > CONTROLLER_JOYSTICK_THRESHOLD) {
-        if (slow) {
-            throttle /= DRIVE_SLOW_MULTIPLIER;
-
-            if (throttle < DRIVE_MINIMUM_SPEED) {
-                throttle = DRIVE_MINIMUM_SPEED;
-            } else if (throttle > DRIVE_SLOW_MAXIMUM_SPEED) {
-                throttle = DRIVE_SLOW_MAXIMUM_SPEED;
-            }
-        } else if (throttle > 120) {
-            throttle = MOTOR_MAX;
-        } else if (throttle < DRIVE_MINIMUM_SPEED) {
-            throttle = DRIVE_MINIMUM_SPEED;
-        }
-
-        if (reverse) {
-            throttle *= -1;
-        }
+    if (throttle > CONTROLLER_JOYSTICK_THRESHOLD) {
+        return MOTOR_MAX;
+    } else if (throttle < (CONTROLLER_JOYSTICK_THRESHOLD * -1)) {
+        return MOTOR_MIN;
     } else {
-        throttle = MOTOR_IDLE;
+        return MOTOR_IDLE;
     }
-
-    return throttle;
 }
 
 void operatorControl() {
-    bool slowDrive = false;
     while (true) {
-        // Left Keypad [Up] - Enable Slow Drive
-        if (joystickGetDigital(CONTROLLER_ID, 7, JOY_UP)) {
-            slowDrive = true;
-        // Left Keypad [Left] - Disable Slow Drive
-        } else if(joystickGetDigital(CONTROLLER_ID, 7, JOY_LEFT)) {
-            slowDrive = false;
-        }
-
         // Left Joystick (y-axis)
-        int leftThrottle = getThrottle(3, slowDrive);
+        int leftThrottle = getThrottle(3);
         chassisLeft(leftThrottle);
 
         // Right Joystick (y-axis)
-        int rightThrottle = getThrottle(2, slowDrive);
+        int rightThrottle = getThrottle(2);
         chassisRight(rightThrottle);
 
         // Right Trigger (Up)
