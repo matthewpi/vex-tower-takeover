@@ -18,6 +18,8 @@
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
 void initializeIO() {
+    pinMode(1, INPUT);
+    pinMode(12, INPUT);
 }
 
 /*
@@ -34,7 +36,10 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
-    print("------------------------------\n");
+    // Potentiometer
+    analogCalibrate(1);
+
+    /*print("------------------------------\n");
     print("Battery Levels\n\n");
 
     int main = powerLevelMain();
@@ -51,5 +56,5 @@ void initialize() {
         print("Backup is not connected.\n");
     }
 
-    print("------------------------------\n");
+    print("------------------------------\n");*/
 }

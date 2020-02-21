@@ -13,31 +13,41 @@
 #include "system/chassis.h"
 #include "system/grabber.h"
 
-#define DRIVE_MINIMUM_SPEED 30
-#define DRIVE_SLOW_MAXIMUM_SPEED 80
-#define DRIVE_SLOW_MULTIPLIER 1.5
+#define ARM_POSITION_HIGHEST 1
+#define ARM_POSITION_MEDIUM  2
+#define ARM_POSITION_LOWEST  3
+#define ARM_POSITION_ZERO    4
+
+int requestedArmPosition = -1;
+bool firstValuesComputed = false;
+bool isPositionBackwards = false;
 
 /**
  * Get's the throttle value for a motor from a joystick.
  *
  * If the joystick's value is not past "CONTROLLER_JOYSTICK_THRESHOLD",
- * negatively or positively the return value will be "MOTOR_IDLE"
- * no matter if the "slow" parameter is true or false.
- *
- * If "slow" is true, the value from the joystick will be:
- *     - Multiplied by "DRIVE_SLOW_MULTIPLIER"
- *     - Capped at "DRIVE_SLOW_MAXIMUM_SPEED" if the value exceeds it
- *     - Motors will run at a minimum "DRIVE_MINIMUM_SPEED"
+ * negatively or positively the return value will be "MOTOR_IDLE".
  */
 int getThrottle(int axis) {
     int throttle = joystickGetAnalog(CONTROLLER_ID, axis);
-    if (throttle > CONTROLLER_JOYSTICK_THRESHOLD) {
-        return MOTOR_MAX;
-    } else if (throttle < (CONTROLLER_JOYSTICK_THRESHOLD * -1)) {
-        return MOTOR_MIN;
-    } else {
+    bool reversed = (throttle < 0);
+    throttle = abs(throttle);
+
+    if (throttle < CONTROLLER_JOYSTICK_THRESHOLD) {
         return MOTOR_IDLE;
     }
+
+    if (throttle < 30) {
+        throttle = 30;
+    } else if (throttle > 120) {
+        throttle = MOTOR_MAX;
+    }
+
+    if (reversed) {
+        throttle *= -1;
+    }
+
+    return throttle;
 }
 
 void operatorControl() {
@@ -50,12 +60,25 @@ void operatorControl() {
         int rightThrottle = getThrottle(2);
         chassisRight(rightThrottle);
 
+        // Arm Position Buttons
+        if (joystickGetDigital(CONTROLLER_ID, 8, JOY_UP)) {
+            requestedArmPosition = ARM_POSITION_HIGHEST;
+        } else if (joystickGetDigital(CONTROLLER_ID, 8, JOY_RIGHT)) {
+            requestedArmPosition = ARM_POSITION_MEDIUM;
+        } else if (joystickGetDigital(CONTROLLER_ID, 8, JOY_LEFT)) {
+            requestedArmPosition = ARM_POSITION_LOWEST;
+        } else if (joystickGetDigital(CONTROLLER_ID, 8, JOY_DOWN)) {
+            requestedArmPosition = ARM_POSITION_ZERO;
+        }
+
         // Right Trigger (Up)
         if (joystickGetDigital(CONTROLLER_ID, 6, JOY_UP)) {
             armLift();
+            requestedArmPosition = -1;
         // Right Trigger (Down)
         } else if (joystickGetDigital(CONTROLLER_ID, 6, JOY_DOWN)) {
             armDown();
+            requestedArmPosition = -1;
         } else {
             armStop();
         }
@@ -65,10 +88,62 @@ void operatorControl() {
     	    grabberClose();
     	// Left Trigger (Down)
     	} else if (joystickGetDigital(CONTROLLER_ID, 5, JOY_DOWN)) {
-    	    grabberOpen();
+            if (digitalRead(1) == LOW) {
+                grabberStop();
+            } else {
+                grabberOpen();
+            }
     	} else {
-    	    grabberStop();
-    	}
+            grabberStop();
+        }
+
+        if (requestedArmPosition != -1) {
+            int potentiometerLimit = -1;
+
+            switch (requestedArmPosition) {
+            case ARM_POSITION_HIGHEST:
+                potentiometerLimit = 900;
+                break;
+            case ARM_POSITION_MEDIUM:
+                potentiometerLimit = 1200;
+                break;
+            case ARM_POSITION_LOWEST:
+                potentiometerLimit = 1800;
+                break;
+            case ARM_POSITION_ZERO:
+                potentiometerLimit = 2500;
+                break;
+            }
+
+            if (potentiometerLimit != -1) {
+                int potentiometerValue = analogRead(1);
+
+                if (!firstValuesComputed) {
+                    isPositionBackwards = potentiometerValue < potentiometerLimit;
+                    firstValuesComputed = true;
+                }
+
+                if (!isPositionBackwards) {
+                    if (potentiometerValue > potentiometerLimit) {
+                        armLift();
+                    } else {
+                        requestedArmPosition = -1;
+                        firstValuesComputed = false;
+                        armStop();
+                    }
+                } else {
+                    if (potentiometerValue < potentiometerLimit) {
+                        armDown();
+                    } else {
+                        requestedArmPosition = -1;
+                        firstValuesComputed = false;
+                        armStop();
+                    }
+                }
+            }
+        }
+
+        // printf("%d\n", analogRead(1));
 
         // Motors can only be updated every 20ms.
         delay(20);

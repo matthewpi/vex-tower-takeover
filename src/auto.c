@@ -158,8 +158,8 @@ void autonomous() {
     regularAutonomous();*/
 
     chassisAll(MOTOR_MAX);
-    delay(500);
+    delay(750);
     chassisAll(MOTOR_MIN);
-    delay(500);
+    delay(750);
     chassisStop();
 }

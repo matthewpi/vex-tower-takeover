@@ -52,6 +52,7 @@ extern "C" {
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
 void autonomous();
+
 /**
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
  * VEX Cortex is starting up. As the scheduler is still paused, most API functions will fail.
@@ -61,6 +62,7 @@ void autonomous();
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
 void initializeIO();
+
 /**
  * Runs user initialization code. This function will be started in its own task with the default
  * priority and stack size once when the robot is starting up. It is possible that the VEXnet
@@ -75,6 +77,7 @@ void initializeIO();
  * can be implemented in this task if desired.
  */
 void initialize();
+
 /**
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System

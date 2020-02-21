@@ -2,6 +2,9 @@
 
 #define SYSTEM_GRABBER_H_
 
+#define ROBOT_SYSTEM_GRABBER_OPEN_SPEED  80
+#define ROBOT_SYSTEM_GRABBER_CLOSE_SPEED 30
+
 /**
  * Opens the grabber.
  */

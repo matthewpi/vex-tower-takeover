@@ -22,25 +22,32 @@ enum RobotTeam {
 // END Controller
 
 // Motors
-#define ROBOT_MOTOR_DRIVE_LEFT1 9
+/*
+1: Empty
+2: Right Drive 1
+3: Right Drive 2
+4: Arm Right
+5: Grabber Right
+6: Grabber Left
+7: Arm Left
+8: Left Drive 1
+9: Left Drive 2
+10: Empty
+*/
+
+#define ROBOT_MOTOR_DRIVE_LEFT1 8
+#define ROBOT_MOTOR_DRIVE_LEFT2 9
 
 #define ROBOT_MOTOR_DRIVE_RIGHT1 2
+#define ROBOT_MOTOR_DRIVE_RIGHT2 3
 
-#define ROBOT_MOTOR_ARM_LEFT1 5
-#define ROBOT_MOTOR_ARM_LEFT2 6
+#define ROBOT_MOTOR_ARM_LEFT 7
 
-#define ROBOT_MOTOR_ARM_RIGHT1 3
-#define ROBOT_MOTOR_ARM_RIGHT2 4
+#define ROBOT_MOTOR_ARM_RIGHT 4
 
-#define ROBOT_MOTOR_GRABBER_LEFT  7
-#define ROBOT_MOTOR_GRABBER_RIGHT 8
+#define ROBOT_MOTOR_GRABBER_LEFT  6
+#define ROBOT_MOTOR_GRABBER_RIGHT 5
 // END Motors
-
-// Jumpers
-#define ROBOT_JUMPER_AUTO_RED    1
-#define ROBOT_JUMPER_AUTO_BLUE   2
-#define ROBOT_JUMPER_AUTO_SKILLS 3
-// END Jumpers
 
 // END Robot Definitions
 
