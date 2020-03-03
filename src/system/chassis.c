@@ -6,9 +6,9 @@
  * Sets the chassis' left drive motor's speed.
  */
 void chassisLeft(int speed) {
-    // Keep "-", motor is on port 1 or 10 preventing the connection from being reversed.
     motorSet(ROBOT_MOTOR_DRIVE_LEFT1, speed);
     motorSet(ROBOT_MOTOR_DRIVE_LEFT2, speed);
+    motorSet(ROBOT_MOTOR_DRIVE_LEFT3, -speed);
 }
 
 /**
@@ -17,6 +17,7 @@ void chassisLeft(int speed) {
 void chassisRight(int speed) {
     motorSet(ROBOT_MOTOR_DRIVE_RIGHT1, -speed);
     motorSet(ROBOT_MOTOR_DRIVE_RIGHT2, -speed);
+    motorSet(ROBOT_MOTOR_DRIVE_RIGHT3, -speed);
 }
 
 /**

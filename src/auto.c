@@ -53,82 +53,6 @@ void driveRight(int speed) {
     }
 }
 
-void regularAutonomous() {
-    /*// Drive forwards
-    chassisAll(MOTOR_MAX);
-    delay(500);
-    chassisStop();
-
-    // Close grabber
-    grabberClose();
-    delay(250);
-    grabberStop();
-
-    // Drive forwards
-    chassisAll(MOTOR_MAX);
-    delay(500);
-    chassisStop();
-
-    // Lift arm
-    armLift();
-    delay(300);
-    armStop();
-
-    // Drive forwards
-    chassisAll(75);
-    delay(250);
-    chassisStop();
-
-    // Open grabber
-    grabberOpen();
-    delay(250);
-    grabberStop();
-
-    // Lower arm
-    armDown();
-    delay(300);
-    armStop();
-
-    // Close grabber
-    grabberClose();
-    delay(250);
-    grabberStop();
-
-    // Lift arm
-    armLift();
-    delay(150);
-    armStop();
-
-    // Drive backwards
-    chassisAll(-75);
-    delay(1500);
-    chassisStop();
-
-    // Turn left
-    driveLeft(75);
-    delay(300);
-
-    // Drive forwards
-    chassisAll(75);
-    delay(2250);
-    chassisStop();
-
-    // Lower arm
-    armDown();
-    delay(150);
-    armStop();
-
-    // Open grabber
-    grabberOpen();
-    delay(250);
-    grabberStop();
-
-    // Drive backwards
-    chassisAll(MOTOR_MIN);
-    delay(500);
-    chassisStop();*/
-}
-
 /*
  * Runs the user autonomous code. This function will be started in its own task with the default
  * priority and stack size whenever the robot is enabled via the Field Management System or the
@@ -157,9 +81,83 @@ void autonomous() {
 
     regularAutonomous();*/
 
+    team = TEAM_RED;
+
+    // Push cube into goal.
     chassisAll(MOTOR_MAX);
-    delay(750);
+    delay(800);
     chassisAll(MOTOR_MIN);
-    delay(750);
+    delay(350);
+
+    // Turn towards the center of the field.
+    driveLeft(MOTOR_MAX);
+    delay(740);
+
+    // Drive forwards.
+    chassisAll(MOTOR_MAX);
+    delay(600);
     chassisStop();
+
+    // Close grabber.
+    grabberClose();
+    delay(425);
+    grabberStop();
+
+    // Turn towards the goal.
+    driveRight(MOTOR_MAX);
+    delay(1090);
+    chassisStop();
+
+    // Lift the arm.
+    while (analogRead(1) > 2100) {
+        armLift();
+        delay(20);
+    }
+    armStop();
+
+    // Drive forwards.
+    chassisAll(80);
+    delay(650);
+    chassisStop();
+
+    // Lower the arm.
+    armDown();
+    delay(200);
+    armStop();
+    delay(100);
+
+    // Open the grabber, wait, drive backwards, wait, then stop the grabber and the chassis.
+    grabberOpen();
+    delay(100);
+    chassisAll(-80);
+    delay(450);
+    grabberStop();
+    chassisStop();
+
+    // Lower the arm all the way.
+    while (analogRead(1) < 2500) {
+        armDown();
+        delay(20);
+    }
+    armStop();
+
+    // Drive forwards.
+    /*chassisAll(-80);
+    delay(200);
+    chassisStop();*/
+
+    // Turn towards the cubes.
+    /*driveLeft(MOTOR_MAX);
+    delay(1090);
+    chassisStop();*/
+
+    // Close the grabber.
+    /*grabberClose();
+    delay(425);
+    grabberStop();*/
+
+    // Turn towards the cubes.
+    /*driveLeft(MOTOR_MAX);
+    delay(1090);
+    chassisStop();*/
 }

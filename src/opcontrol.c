@@ -37,8 +37,8 @@ int getThrottle(int axis) {
         return MOTOR_IDLE;
     }
 
-    if (throttle < 30) {
-        throttle = 30;
+    if (throttle < 40) {
+        throttle = 40;
     } else if (throttle > 120) {
         throttle = MOTOR_MAX;
     }
