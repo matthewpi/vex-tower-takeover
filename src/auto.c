@@ -13,7 +13,7 @@
 #include "system/chassis.h"
 #include "system/grabber.h"
 
-enum RobotTeam team;
+enum RobotTeam team = TEAM_RED;
 
 /**
  * This is in perspective of on the RED side of the field.
@@ -53,36 +53,55 @@ void driveRight(int speed) {
     }
 }
 
-/*
- * Runs the user autonomous code. This function will be started in its own task with the default
- * priority and stack size whenever the robot is enabled via the Field Management System or the
- * VEX Competition Switch in the autonomous mode. If the robot is disabled or communications is
- * lost, the autonomous task will be stopped by the kernel. Re-enabling the robot will restart
- * the task, not re-start it from where it left off.
- *
- * Code running in the autonomous task cannot access information from the VEX Joystick. However,
- * the autonomous function can be invoked from another task if a VEX Competition Switch is not
- * available, and it can access joystick information if called in this way.
- *
- * The autonomous task may exit, unlike operatorControl() which should never exit. If it does
- * so, the robot will await a switch to another mode or disable/enable cycle.
- */
-void autonomous() {
-    /*if (analogRead(ROBOT_JUMPER_AUTO_RED) > 0) {
-        team = TEAM_RED;
-    } else if (analogRead(ROBOT_JUMPER_AUTO_BLUE) > 0) {
-        team = TEAM_BLUE;
-    } else if (analogRead(ROBOT_JUMPER_AUTO_SKILLS) > 0) {
-        skillsAutonomous();
-        return;
-    } else {
-        return;
-    }
+void largeGoalAutonomous() {
+    // Push cube into goal.
+    chassisAll(MOTOR_MAX);
+    delay(850);
+    chassisAll(MOTOR_MIN);
+    delay(170);
 
-    regularAutonomous();*/
+    // Turn towards the center of the field.
+    driveRight(MOTOR_MAX);
+    delay(850);
 
-    team = TEAM_RED;
+    // Drive forwards.
+    chassisAll(MOTOR_MAX);
+    delay(1000);
+    chassisStop();
 
+    // Close grabber.
+    grabberClose();
+    delay(425);
+    grabberStop();
+
+    // Turn towards the field perimeter.
+    driveLeft(MOTOR_MAX);
+    delay(850);
+
+    // Drive forwards.
+    chassisAll(MOTOR_MAX);
+    delay(450);
+
+    // Turn left.
+    driveLeft(MOTOR_MAX);
+    delay(450);
+
+    // Drive forwards.
+    chassisAll(MOTOR_MAX);
+    delay(550);
+    chassisStop();
+
+    // Open the grabber.
+    grabberOpen();
+    delay(200);
+    chassisAll(MOTOR_MIN);
+    delay(500);
+    grabberStop();
+
+    // Drive backwards
+}
+
+void smallGoalAutonomous() {
     // Push cube into goal.
     chassisAll(MOTOR_MAX);
     delay(800);
@@ -91,7 +110,7 @@ void autonomous() {
 
     // Turn towards the center of the field.
     driveLeft(MOTOR_MAX);
-    delay(740);
+    delay(750);
 
     // Drive forwards.
     chassisAll(MOTOR_MAX);
@@ -160,4 +179,35 @@ void autonomous() {
     /*driveLeft(MOTOR_MAX);
     delay(1090);
     chassisStop();*/
+}
+
+/*
+ * Runs the user autonomous code. This function will be started in its own task with the default
+ * priority and stack size whenever the robot is enabled via the Field Management System or the
+ * VEX Competition Switch in the autonomous mode. If the robot is disabled or communications is
+ * lost, the autonomous task will be stopped by the kernel. Re-enabling the robot will restart
+ * the task, not re-start it from where it left off.
+ *
+ * Code running in the autonomous task cannot access information from the VEX Joystick. However,
+ * the autonomous function can be invoked from another task if a VEX Competition Switch is not
+ * available, and it can access joystick information if called in this way.
+ *
+ * The autonomous task may exit, unlike operatorControl() which should never exit. If it does
+ * so, the robot will await a switch to another mode or disable/enable cycle.
+ */
+void autonomous() {
+    /*if (analogRead(ROBOT_JUMPER_AUTO_RED) > 0) {
+        team = TEAM_RED;
+    } else if (analogRead(ROBOT_JUMPER_AUTO_BLUE) > 0) {
+        team = TEAM_BLUE;
+    } else if (analogRead(ROBOT_JUMPER_AUTO_SKILLS) > 0) {
+        skillsAutonomous();
+        return;
+    } else {
+        return;
+    }
+
+    regularAutonomous();*/
+
+    largeGoalAutonomous();
 }

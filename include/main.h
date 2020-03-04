@@ -37,6 +37,9 @@ extern "C" {
 
 // Prototypes for initialization, operator control and autonomous
 
+void largeGoalAutonomous();
+void smallGoalAutonomous();
+
 /**
  * Runs the user autonomous code. This function will be started in its own task with the default
  * priority and stack size whenever the robot is enabled via the Field Management System or the

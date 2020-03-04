@@ -143,6 +143,13 @@ void operatorControl() {
             }
         }
 
+        // Autonomous Testing Shit
+        if (joystickGetDigital(CONTROLLER_ID, 7, JOY_LEFT)) {
+            largeGoalAutonomous();
+        } else if (joystickGetDigital(CONTROLLER_ID, 7, JOY_DOWN)) {
+            smallGoalAutonomous();
+        }
+
         // printf("%d\n", analogRead(1));
 
         // Motors can only be updated every 20ms.
